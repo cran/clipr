@@ -1,0 +1,11 @@
+8100d2c688d774167acf46d2b223be28 *DESCRIPTION
+aa4f11cf8fbcc68df4de2a0ac02bb47d *NAMESPACE
+2df91dc6ee4dbbdfaebda44052eff0d3 *R/clipboard.R
+75fa13b538849650db181975bd8c12e5 *R/flat_str.R
+0d9c0d549deb15d08157310cda935d6d *R/linux_clipboard.R
+144ab87b873e27d3de4a04cde132e45c *R/osx_clipboard.R
+bcacf322756ffe58c2fafb543809eeed *R/sys_type.R
+19a13fa1a99077acd6917e21cb6fed9c *R/win_clipboard.R
+2524e90c4c8f16db1f1fbe6b1010170b *README.md
+ae05f17cf3736539b3dd83b3018ea149 *man/read_clip.Rd
+013e4597963c8995a1ca8082226d1e56 *man/write_clip.Rd

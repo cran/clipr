@@ -8,6 +8,22 @@ clipr
 
 Simple utility functions to read and write from the system clipboards of Windows, OS X, and Unix-like systems (which require either xclip or xsel.)
 
+## Installation
+
+Install from CRAN
+
+```r
+install.packages("clipr")
+```
+
+Or try the development version
+
+```r
+devtools::install_github("mdlincoln/clipr")
+```
+
+## Usage
+
 ``` r
 library("clipr")
 
@@ -35,6 +51,8 @@ cb
 #> [1] "a\tb\n1\t4\n2\t5\n3\t6"   # on OS X or Unix-like
 #> [1] "a,b\r\n1,4\r\n2,5\r\n3,6" # on Windows
 ```
+
+`read_clip_tbl` will try to parse clipboard contents from spreadsheets into data frames directly.
 
 ---
 [Matthew Lincoln](http://matthewlincoln.net) | University of Maryland, College Park

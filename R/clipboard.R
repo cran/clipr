@@ -7,9 +7,7 @@
 #'
 #' @note \code{read_clip} will not try to guess at how to parse copied text. If
 #'   you are copying tabular data, it is suggested that you use
-#'   \code{\link[readr]{read_delim}} or one of its sibling functions from the
-#'   readr package (\url{https://cran.r-project.org/package=readr}) to coax the
-#'   text into a data frame.
+#'   \code{\link{read_clip_tbl}}.
 #'
 #' @examples
 #' clip_text <- read_clip()
@@ -23,7 +21,7 @@ read_clip <- function() {
   chosen_read_clip <- switch(sys.type,
         "Darwin" = osx_read_clip,
         "Windows" = win_read_clip,
-        linux_read_clip
+        X11_read_clip
   )
 
   content <- chosen_read_clip()
@@ -56,8 +54,13 @@ read_clip <- function() {
 #' @param return_new If true, returns the rendered string; if false, returns the
 #'   original object
 #' @param ... Custom options to be passed to \code{\link{write.table}} (if the
-#'   object is a table-like) Defaults to
-#'   sane line-break and tab standards based on the operating system.
+#'   object is a table-like) Defaults to sane line-break and tab standards based
+#'   on the operating system.
+#'
+#' @note On X11 systems, \code{write_clip} will cause either xclip (preferred)
+#'   or xsel to be called. Be aware that, by design, these processes will fork
+#'   into the background until the next paste event, when they will then exit
+#'   silently.
 #'
 #' @return Invisibly returns the original object
 #'
@@ -77,21 +80,23 @@ read_clip <- function() {
 #' tbl <- data.frame(a=c(1,2,3), b=c(4,5,6))
 #' write_clip(tbl)
 #' @export
-write_clip <- function(content, object_type = c("auto", "character", "table"), breaks = NULL, eos = NULL, return_new = TRUE, ...) invisible({
+write_clip <- function(content, object_type = c("auto", "character", "table"),
+                       breaks = NULL, eos = NULL, return_new = TRUE, ...) {
   object_type <- match.arg(object_type)
   # Determine system type
   sys.type <- sys_type()
 
-  # Choose an operating system-specific function (stop with error if not recognized)
+  # Choose an operating system-specific function (stop with error if not
+  # recognized)
   chosen_write_clip <- switch(sys.type,
                           "Darwin" = osx_write_clip,
                           "Windows" = win_write_clip,
-                          linux_write_clip
+                          X11_write_clip
   )
 
   # Supply the clipboard content to write and options list to this function
-  chosen_write_clip(content, object_type, breaks, eos, return_new, ...)
-})
+  invisible(chosen_write_clip(content, object_type, breaks, eos, return_new, ...))
+}
 
 #' Clear clipboard
 #'

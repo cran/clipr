@@ -10,7 +10,9 @@
 #'   \code{\link{read_clip_tbl}}.
 #'
 #' @examples
+#' \dontrun{
 #' clip_text <- read_clip()
+#' }
 #'
 #' @export
 read_clip <- function() {
@@ -26,7 +28,7 @@ read_clip <- function() {
 
   content <- chosen_read_clip()
 
-  if(length(content) == 0) {
+  if (length(content) == 0) {
     warning("System clipboard contained no readable text. Returning NULL.")
     return(NULL)
   }
@@ -65,6 +67,7 @@ read_clip <- function() {
 #' @return Invisibly returns the original object
 #'
 #' @examples
+#' \dontrun{
 #' text <- "Write to clipboard"
 #' write_clip(text)
 #'
@@ -79,6 +82,8 @@ read_clip <- function() {
 #'
 #' tbl <- data.frame(a=c(1,2,3), b=c(4,5,6))
 #' write_clip(tbl)
+#' }
+#'
 #' @export
 write_clip <- function(content, object_type = c("auto", "character", "table"),
                        breaks = NULL, eos = NULL, return_new = TRUE, ...) {

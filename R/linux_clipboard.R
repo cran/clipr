@@ -1,17 +1,33 @@
-# Determine if system has 'xclip' installed
-has_xclip <- function() {
-  nzchar(Sys.which("xclip"))
+# Determine if a given utility is installed AND accessible
+has_util <- function(util_name, util_test) {
+  if (nzchar(Sys.which(util_name))) {
+    # If utility is accessible, check that DISPLAY can be opened.
+    try_res <- tryCatch(system2(util_test, stdout = TRUE, stderr = TRUE),
+                        error = function(c) FALSE,
+                        warning = function(c) FALSE)
+
+    # In the case of an error/warning on trying the function, then the util is
+    # not available
+    if (try_res == FALSE) {
+      FALSE
+    } else {
+      TRUE
+    }
+  } else {
+    FALSE
+  }
 }
 
+# Determine if system has 'xclip' installed AND it's accessible
+has_xclip <- function() has_util("xclip", "xclip -o -selection clipboard")
+
 # Determine if system has 'xsel' installed
-has_xsel <- function() {
-  nzchar(Sys.which("xsel"))
-}
+has_xsel <- function() has_util("xsel", "xsel --clipboard")
 
 # Stop read/write and return an error of missing clipboard software.
 notify_no_cb <- function() {
   stop("Clipboard on X11 requires 'xclip' (recommended) or 'xsel'.",
-       call.=FALSE)
+       call. = FALSE)
 }
 
 # Helper function to read from the X11 clipboard
@@ -65,7 +81,7 @@ X11_write_clip <- function(content, object_type, breaks, eos, return_new, ...) {
   rendered_content <- render_object(content, object_type, breaks, .dots)
   writeChar(rendered_content, con = con, eos = eos)
   close(con)
-  if(return_new) {
+  if (return_new) {
     rendered_content
   } else {
     content

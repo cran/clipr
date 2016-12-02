@@ -1,11 +1,11 @@
-27db5d390b9f939164804132a77f9e9b *DESCRIPTION
+a8372ea296373e9a35720271e1e53698 *DESCRIPTION
 edd55ed3e03695de81f7036c6e48651f *NAMESPACE
-c281426476a65da655a76c7d6ba2abc3 *NEWS.md
+28ce496b28c6110a4a3c66636c403f7b *NEWS.md
 24a317f37a7352efcccb8eeadfb31992 *R/clipboard.R
 90fab27049598aa0778d157c8b07f996 *R/clipr-package.R
 c3673645d26e307510e4b9092022ab7b *R/clipr_addin.R
 414d0896023ef088ddb337aaa97601b9 *R/flat_str.R
-df253b8aa7456e231ea5aae72cc2b8c3 *R/linux_clipboard.R
+7acb164ad40deb68cd60b224c60dd846 *R/linux_clipboard.R
 7ef2a5fecf40b9920c0b2bc5080897e4 *R/osx_clipboard.R
 7e2774e5e98e7fa61f512c8858eed191 *R/read_clip_tbl.R
 10152fe38ccd2bc597d8d62f0da5b966 *R/sys_type.R
@@ -19,4 +19,4 @@ feb3698592f6333253b754ccaf4aabbb *man/clipr_available.Rd
 7c6eb48b659e5d99fdb83b07473a10d0 *man/read_clip_tbl.Rd
 755e3b78c2f69681e13dd2f6d963c90d *man/write_clip.Rd
 ec77100d776b5924e0da206268d2517d *tests/testthat.R
-60ca590c2019b2c710e8a1b3ad0098ac *tests/testthat/test_render.R
+f64882da8a589ddfbd8e29a67a903c5a *tests/testthat/test_render.R

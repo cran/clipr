@@ -26,6 +26,28 @@ test_that("clipr_available() does not overwrite existing contents", {
   expect_equal(read_clip(), "z")
 })
 
+test_that("single NA vectors don't cause error", {
+  skip_if_not(is_clipr_available, skip_msg)
+
+  expect_equivalent(write_clip(NA_character_), "NA")
+  expect_warning(write_clip(NA))
+  expect_warning(write_clip(NA_integer_))
+  expect_warning(write_clip(NA_real_))
+  expect_warning(write_clip(NA_complex_))
+})
+
+test_that("empty character in write_clip() causes no erroneous warning", {
+  skip_if_not(is_clipr_available, skip_msg)
+
+  expect_equivalent(write_clip(""), "")
+  expect_warning(null_res <- write_clip(NULL))
+  expect_equivalent(null_res, "")
+  expect_equivalent(write_clip(character(0)), "")
+  expect_warning(empty_res <- write_clip(integer(0)))
+  expect_equivalent(empty_res, "")
+  expect_silent(clear_clip())
+})
+
 test_that("Render character vectors", {
   skip_if_not(is_clipr_available, skip_msg)
 

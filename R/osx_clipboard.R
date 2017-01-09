@@ -14,6 +14,12 @@ osx_write_clip <- function(content, object_type, breaks, eos, return_new, ...) {
   .dots <- list(...)
   con <- pipe("pbcopy")
 
+  write_nix(content, object_type, breaks, eos, return_new, con, .dots)
+}
+
+# The same content rendering and writing steps are used in both OS X and Linux,
+# just with different connection objects
+write_nix <- function(content, object_type, breaks, eos, return_new, con, .dots) {
   # If no custom line separator has been specified, use Unix's default newline
   # character '\n'
   breaks <- ifelse(is.null(breaks), '\n', breaks)
@@ -24,8 +30,17 @@ osx_write_clip <- function(content, object_type, breaks, eos, return_new, ...) {
 
   # Pass the object to rendering functions before writing out to the clipboard
   rendered_content <- render_object(content, object_type, breaks, .dots)
-  writeChar(rendered_content, con = con, eos = eos)
+
+  # Suppress pipe() warning when writing an empty string with a NULL string
+  # ending.
+  if (identical(rendered_content, "")) {
+    suppressWarnings(writeChar(rendered_content, con = con, eos = eos))
+  } else {
+    writeChar(rendered_content, con = con, eos = eos)
+  }
+
   close(con)
+
   if (return_new) {
     rendered_content
   } else {

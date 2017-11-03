@@ -2,12 +2,19 @@
 % Please edit documentation in R/sys_type.R
 \name{clipr_available}
 \alias{clipr_available}
+\alias{dr_clipr}
 \title{Is the system clipboard available?}
 \usage{
 clipr_available()
+
+dr_clipr()
 }
 \value{
-boolean
+\code{clipr_available} returns a boolean value.
+
+\code{dr_clipr} prints an informative message to the console with
+  software and system configuration requirements if clipr is not available
+  (invisibly returns the same string)
 }
 \description{
 Checks to see if the system clipboard is write-able/read-able. This may be

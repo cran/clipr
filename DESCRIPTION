@@ -1,7 +1,7 @@
 Package: clipr
 Type: Package
 Title: Read and Write from the System Clipboard
-Version: 0.3.3
+Version: 0.4.0
 Authors@R: c(
   person("Matthew", "Lincoln", email = "matthew.d.lincoln@gmail.com", role = c("aut", "cre")),
   person("Louis", "Maddox", role = "ctb"),
@@ -20,11 +20,11 @@ URL: https://github.com/mdlincoln/clipr
 BugReports: https://github.com/mdlincoln/clipr/issues
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-06-19 17:51:30 UTC; MLincoln
+Packaged: 2017-11-02 23:47:38 UTC; MLincoln
 Author: Matthew Lincoln [aut, cre],
   Louis Maddox [ctb],
   Steve Simpson [ctb],
   Jennifer Bryan [ctb]
 Maintainer: Matthew Lincoln <matthew.d.lincoln@gmail.com>
 Repository: CRAN
-Date/Publication: 2017-06-19 23:24:15 UTC
+Date/Publication: 2017-11-03 12:20:02 UTC

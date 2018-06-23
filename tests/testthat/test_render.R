@@ -1,42 +1,4 @@
-skip_msg <- "System clipboard is not available - skipping test."
 context("Clipr read and write")
-
-is_clipr_available <- clipr_available()
-
-test_that("clipr_available fails when DISPLAY is not configured; succeeds when it is", {
-  # Only run this test on Travis
-  skip_if_not(identical(Sys.getenv("TRAVIS"), "true"))
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "none"))
-    expect_false(is_clipr_available)
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "xclip"))
-    expect_true(is_clipr_available)
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "xsel"))
-    expect_true(is_clipr_available)
-})
-
-test_that("dr_clipr provides informative messages", {
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "xclip"))
-    expect_message(dr_clipr(), msg_clipr_available(), fixed = TRUE)
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "xsel"))
-    expect_message(dr_clipr(), msg_clipr_available(), fixed = TRUE)
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "none"))
-    expect_message(dr_clipr(), msg_no_clipboard(), fixed = TRUE)
-  if (identical(Sys.getenv("TRAVIS_CLIP"), "nodisplay"))
-    expect_message(dr_clipr(), msg_no_display(), fixed = TRUE)
-})
-
-test_that("Unavailable clipboard throws warning", {
-  if (!is_clipr_available) {
-    expect_error(write_clip("a"))
-  }
-})
-
-test_that("clipr_available() does not overwrite existing contents", {
-  skip_if_not(is_clipr_available, skip_msg)
-  write_clip("z")
-  clipr_available()
-  expect_equal(read_clip(), "z")
-})
 
 test_that("single NA vectors don't cause error", {
   skip_if_not(is_clipr_available, skip_msg)
@@ -146,4 +108,34 @@ test_that("Render tables read from clipboard as data.frames", {
 
   inv_out <- write_clip(iris[1:2, 1:4])
   expect_equivalent(read_clip_tbl(), iris[1:2, 1:4])
+})
+
+test_that("Tables written with rownames add extra space for column names", {
+  skip_if_not(is_clipr_available, skip_msg)
+
+  d <- matrix(1:4, 2)
+  rownames(d) <- c('a','b')
+  colnames(d) <- c('c','d')
+  df <- data.frame(c = c(1, 2), d = c(3, 4))
+  rownames(df) <- c('a', 'b')
+
+  mat_rnames_out <- write_clip(d, row.names = TRUE, col.names = FALSE)
+  df_rnames_out <- write_clip(df, row.names = TRUE, col.names = FALSE)
+  if (sys_type() == "Windows") {
+    expect_equivalent(mat_rnames_out, "a\t1\t3\r\nb\t2\t4")
+    expect_equivalent(df_rnames_out, "a\t1\t3\r\nb\t2\t4")
+  } else {
+    expect_equivalent(mat_rnames_out, "a\t1\t3\nb\t2\t4")
+    expect_equivalent(df_rnames_out, "a\t1\t3\nb\t2\t4")
+  }
+
+  mat_bnames_out <- write_clip(d, row.names = TRUE, col.names = TRUE)
+  df_bnames_out <- write_clip(df, row.names = TRUE, col.names = TRUE)
+  if (sys_type() == "Windows") {
+    expect_equivalent(mat_bnames_out, "\tc\td\r\na\t1\t3\r\nb\t2\t4")
+    expect_equivalent(df_bnames_out, "\tc\td\r\na\t1\t3\r\nb\t2\t4")
+  } else {
+    expect_equivalent(mat_bnames_out, "\tc\td\na\t1\t3\nb\t2\t4")
+    expect_equivalent(df_bnames_out, "\tc\td\na\t1\t3\nb\t2\t4")
+  }
 })

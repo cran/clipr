@@ -1,3 +1,7 @@
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage("Welcome to clipr. See ?write_clip for advisories on writing to the clipboard in R.")
+}
+
 # Determine system type
 sys_type <- function() {
   return(Sys.info()["sysname"])
@@ -10,6 +14,13 @@ sys_type <- function() {
 #' to ensure that it will skip tests on machines (e.g. CRAN, Travis) where
 #' the system clipboard may not be available.
 #'
+#' If you are trying to call this in a non-interactive session, be sure to call
+#' using \code{clipr_available(allow_non_interactive = TRUE), or by setting the
+#' environemnt variable CLIPBOARD_AVAILABLE=TRUE}
+#'
+#' @param \ldots Pass other options to \link{write_clip}. Generally only used to
+#'   pass the argument \code{allow_non_interactive_use = TRUE}.
+#'
 #' @return \code{clipr_available} returns a boolean value.
 #'
 #' @examples
@@ -20,8 +31,8 @@ sys_type <- function() {
 #' }
 #'
 #' @export
-clipr_available <- function() {
-  clipr_results_check(clipr_available_handler())
+clipr_available <- function(...) {
+  clipr_results_check(clipr_available_handler(...))
 }
 
 #' @rdname clipr_available
@@ -31,8 +42,8 @@ clipr_available <- function() {
 #'   (invisibly returns the same string)
 #'
 #' @export
-dr_clipr <- function() {
-  res <- clipr_available_handler()
+dr_clipr <- function(...) {
+  res <- clipr_available_handler(...)
 
   if (clipr_results_check(res)) {
     msg <- msg_clipr_available()
@@ -44,10 +55,10 @@ dr_clipr <- function() {
   invisible(msg)
 }
 
-clipr_available_handler <- function() {
+clipr_available_handler <- function(...) {
   suppressWarnings({
-    read_attempt <- try(read_clip(), silent = TRUE)
-    write_attempt <- try(write_clip(read_attempt), silent = TRUE)
+    read_attempt <- try(read_clip(...), silent = TRUE)
+    write_attempt <- try(write_clip(read_attempt, ...), silent = TRUE)
   })
   return(list(read = read_attempt, write = write_attempt))
 }
@@ -68,3 +79,9 @@ msg_clipr_available <- function() "clipr has read/write access to the system cli
 msg_no_clipboard <- function() "Clipboard on X11 requires 'xclip' (recommended) or 'xsel'."
 
 msg_no_display <- function() "Clipboard on X11 requires that the DISPLAY envvar be configured."
+
+msg_interactive <- function() "To run write_clip() in non-interactive mode, either call write_clip() with allow_non_interactive = TRUE, or set the environment variable CLIPR_ALLOW=TRUE"
+
+warn_interactive <- function() {
+  stop(msg_interactive())
+}

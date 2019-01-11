@@ -5,7 +5,8 @@
 \title{Write clipboard}
 \usage{
 write_clip(content, object_type = c("auto", "character", "table"),
-  breaks = NULL, eos = NULL, return_new = TRUE, ...)
+  breaks = NULL, eos = NULL, return_new = TRUE,
+  allow_non_interactive = Sys.getenv("CLIPR_ALLOW", interactive()), ...)
 }
 \arguments{
 \item{content}{An object to be written to the system clipboard.}
@@ -28,9 +29,15 @@ ASCII \code{nul}. Defaults to no terminator character, indicated by
 \item{return_new}{If true, returns the rendered string; if false, returns the
 original object}
 
-\item{...}{Custom options to be passed to \code{\link{write.table}} (if the
-object is a table-like) Defaults to sane line-break and tab standards based
-on the operating system.}
+\item{allow_non_interactive}{By default, clipr will throw an error if run in
+a non-interactive session. Set the environment variable
+\code{CLIPR_ALLOW=TRUE} in order to override this behavior, however see the
+advisory below before doing so.}
+
+\item{...}{Custom options to be passed to \code{\link{write.table}} (if
+\code{x} is a table-like). Defaults to sane line-break and tab standards
+based on the operating system. By default \code{col.names = FALSE}, however
+you may override this by passing \code{col.names = TRUE}.}
 }
 \value{
 Invisibly returns the original object
@@ -41,8 +48,21 @@ Write a character vector to the system clipboard
 \note{
 On X11 systems, \code{write_clip} will cause either xclip (preferred)
   or xsel to be called. Be aware that, by design, these processes will fork
-  into the background until the next paste event, when they will then exit
-  silently.
+  into the background. They will run until the next paste event, when they
+  will then exit silently. (See the man pages for
+  \href{https://linux.die.net/man/1/xclip}{xclip} and
+  \href{http://www.vergenet.net/~conrad/software/xsel/xsel.1x.html#notes}{xsel}
+   for more on their behaviors.) However, this means that even if you
+  terminate your R session after running \code{write_clip}, those processes
+  will continue until you access the clipboard via another program. This may
+  be expected behavior for interactive use, but is generally undesirable for
+  non-interactive use. For this reason you must not run \code{write_clip} on
+  CRAN, as the nature of xsel
+  \href{https://github.com/mdlincoln/clipr/issues/38}{has caused issues in
+  the past}.
+
+  Call \code{\link{clipr_available}} to safely check whether the clipboard is
+  readable and writable.
 }
 \examples{
 \dontrun{

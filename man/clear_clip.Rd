@@ -4,7 +4,10 @@
 \alias{clear_clip}
 \title{Clear clipboard}
 \usage{
-clear_clip()
+clear_clip(...)
+}
+\arguments{
+\item{\ldots}{Pass other options to \link{write_clip}.}
 }
 \description{
 Clear the system clipboard.

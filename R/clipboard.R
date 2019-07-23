@@ -2,6 +2,10 @@
 #'
 #' Read the contents of the system clipboard into a character vector.
 #'
+#' @param allow_non_interactive By default, clipr will throw an error if run in
+#'   a non-interactive session. Set the environment variable
+#'   `CLIPR_ALLOW=TRUE` in order to override this behavior.
+#'
 #' @return A character vector with the contents of the clipboard. If the system
 #'   clipboard is empty, returns NULL
 #'
@@ -15,7 +19,8 @@
 #' }
 #'
 #' @export
-read_clip <- function() {
+read_clip <- function(allow_non_interactive = Sys.getenv("CLIPR_ALLOW", interactive())) {
+  if (allow_non_interactive != "TRUE") error_interactive()
 
   # Determine system type
   sys.type <- sys_type()
@@ -41,6 +46,8 @@ read_clip <- function() {
 #'
 #' Write a character vector to the system clipboard
 #'
+#' @inheritParams read_clip
+#'
 #' @param content An object to be written to the system clipboard.
 #' @param object_type [write_clip()] tries to be smart about writing objects in a
 #'   useful manner. If passed a data.frame or matrix, it will format it using
@@ -56,14 +63,12 @@ read_clip <- function() {
 #'   `NULL`.
 #' @param return_new If true, returns the rendered string; if false, returns the
 #'   original object
-#' @param allow_non_interactive By default, clipr will throw an error if run in
-#'   a non-interactive session. Set the environment variable
-#'   `CLIPR_ALLOW=TRUE` in order to override this behavior, however see the
-#'   advisory below before doing so.
-#' @param ... Custom options to be passed to [write.table()] (if
-#'   `x` is a table-like). Defaults to sane line-break and tab standards
-#'   based on the operating system. By default `col.names = FALSE`, however
-#'   you may override this by passing `col.names = TRUE`.
+#' @param ... Custom options to be passed to [write.table()] (if `x` is a
+#'   table-like). Defaults to sane line-break and tab standards based on the
+#'   operating system. By default, this will use `col.names = TRUE` if the table
+#'   object has column names, and `row.names = TRUE` if the object has row names
+#'   other than `c("1", "2", "3"...)`. Override these defaults by passing
+#'   arguments here.
 #'
 #' @note On X11 systems, [write_clip()] will cause either xclip (preferred) or
 #'   xsel to be called. Be aware that, by design, these processes will fork into
@@ -106,7 +111,7 @@ read_clip <- function() {
 write_clip <- function(content, object_type = c("auto", "character", "table"),
                        breaks = NULL, eos = NULL, return_new = FALSE,
                        allow_non_interactive = Sys.getenv("CLIPR_ALLOW", interactive()), ...) {
-  if (allow_non_interactive != "TRUE") warn_interactive()
+  if (allow_non_interactive != "TRUE") error_interactive()
 
   object_type <- match.arg(object_type)
   # Determine system type

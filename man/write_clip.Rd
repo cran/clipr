@@ -31,13 +31,14 @@ original object}
 
 \item{allow_non_interactive}{By default, clipr will throw an error if run in
 a non-interactive session. Set the environment variable
-\code{CLIPR_ALLOW=TRUE} in order to override this behavior, however see the
-advisory below before doing so.}
+\code{CLIPR_ALLOW=TRUE} in order to override this behavior.}
 
-\item{...}{Custom options to be passed to \code{\link[=write.table]{write.table()}} (if
-\code{x} is a table-like). Defaults to sane line-break and tab standards
-based on the operating system. By default \code{col.names = FALSE}, however
-you may override this by passing \code{col.names = TRUE}.}
+\item{...}{Custom options to be passed to \code{\link[=write.table]{write.table()}} (if \code{x} is a
+table-like). Defaults to sane line-break and tab standards based on the
+operating system. By default, this will use \code{col.names = TRUE} if the table
+object has column names, and \code{row.names = TRUE} if the object has row names
+other than \code{c("1", "2", "3"...)}. Override these defaults by passing
+arguments here.}
 }
 \value{
 Invisibly returns the original object

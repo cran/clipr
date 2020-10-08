@@ -25,7 +25,7 @@ has_util <- function(util_test) {
 has_xclip <- function() has_util(c("xclip", "-o", "-selection", "clipboard"))
 
 # Determine if system has 'xsel' installed
-has_xsel <- function() has_util(c("xsel", "--clipboard"))
+has_xsel <- function() has_util(c("xsel", "--clipboard", "--output"))
 
 # Stop read/write and return an error of missing clipboard software.
 notify_no_cb <- function() {
@@ -46,7 +46,7 @@ X11_read_clip <- function() {
   if (has_xclip()) {
     con <- pipe("xclip -o -selection clipboard")
   } else if (has_xsel()) {
-    con <- pipe("xsel --clipboard")
+    con <- pipe("xsel --clipboard --output")
   } else {
     notify_no_cb()
   }
@@ -68,7 +68,7 @@ X11_write_clip <- function(content, object_type, breaks, eos, return_new, ...) {
   if (has_xclip()) {
     con <- pipe("xclip -i -sel p -f | xclip -i -sel c", "w")
   } else if (has_xsel()) {
-    con <- pipe("xsel -b -i", "w")
+    con <- pipe("xsel --clipboard --input", "w")
   } else {
     notify_no_cb()
   }
